@@ -1,0 +1,65 @@
+----------Nginx Install--------------------
+
+apt update
+apt install nginx
+ufw app list        ------> apt install openssh-server
+ufw allow 'Nginx HTTP'
+
+
+----------------MySql Install---------------
+
+apt install mysql-server
+mysql_secure_installation
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Root12345!';
+
+
+
+-------------PHP Install--------------------
+
+apt install php8.1-fpm php-mysql
+
+
+apt install php8.1 php8.1-fpm php8.1-mysql php-common php8.1-cli php8.1-common php8.1-opcache php8.1-readline php8.1-mbstring php8.1-xml php8.1-gd php8.1-curl
+
+systemctl status php8.1-fpm
+mkdir /var/www/siyam
+chown -R $USER:$USER /var/www/siyam
+vim /etc/nginx/sites-available/siyam
+
+---------------------------------------
+server {
+    listen 80;
+    server_name your_domain www.your_domain;
+    root /var/www/your_domain;
+
+    index index.html index.htm index.php;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+     }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+}
+--------------------------------------------
+
+ln -s /etc/nginx/sites-available/siyam /etc/nginx/sites-enabled/
+unlink /etc/nginx/sites-enabled/default
+nginx -t
+systemctl reload nginx
+
+
+
+-------------------PHP my admin Install-----------------------
+
+apt update
+apt install phpmyadmin
+ln -s /usr/share/phpmyadmin /var/www/siyam/phpmyadmin
+
