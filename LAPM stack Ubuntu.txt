@@ -1,0 +1,54 @@
+apt install openssh-server
+ufw allow ssh
+ufw allow 22
+ufw enable
+ufw status
+
+-----------Apche2 Install----------
+
+apt update
+apt install apache2
+ufw status
+
+
+----------MySql Install------------
+
+apt install mysql-server
+mysql_secure_installation
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Root12345!';
+
+----------PHP install---------------
+
+apt install php libapache2-mod-php php-mysql
+php -v
+mkdir /var/www/your_domain
+chown -R $USER:$USER /var/www/your_domain   (current user permission)
+vim /etc/apache2/sites-available/your_domain.conf
+
+-------
+<VirtualHost *:80>
+    ServerName your_domain
+    ServerAlias www.your_domain 
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/your_domain
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+--------
+
+a2ensite your_domain
+a2dissite 000-default    (disable default)
+apache2ctl configtest    (syntax check)
+systemctl reload apache2
+vim /var/www/your_domain/index.html
+vim /etc/apache2/mods-enabled/dir.conf
+systemctl reload apache2
+vim /var/www/your_domain/info.php
+
+
+------------phpMyAdmin install----------
+
+apt update
+apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl
+apt install phpmyadmin
+systemctl restart apache2

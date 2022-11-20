@@ -1,0 +1,53 @@
+--------------apache2 install----------
+
+yum install httpd
+
+
+--------------Mariadb Install------------
+
+yum install mariadb-server
+systemctl start mariadb
+systemctl enable mariadb.service
+mysql
+
+--------------mysql install-------------
+
+yum update
+wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+rpm -Uvh mysql80-community-release-el7-3.noarch.rpm
+sudo rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+yum install mysql-server
+systemctl start mysqld
+grep 'temporary password' /var/log/mysqld.log  ( Temporary Password )
+mysql_secure_installation
+
+----Change MySql Password-----
+
+systemctl stop mysqld
+systemctl set-environment MYSQLD_OPTS="--skip-grant-tables"
+systemctl start mysqld
+mysql -u root
+
+
+-------------PHP Install----------------
+
+sudo yum install php php-mysql
+systemctl restart httpd.service
+vim /var/www/html/info.php
+
+--------------------
+<?php phpinfo(); ?>
+--------------------
+
+
+-------------phpMyAdmin Install-----------
+
+yum install epel-release
+yum install phpmyadmin
+nano /etc/httpd/conf.d/phpMyAdmin.conf
+
+-------
+Require all granted
+Allow from All
+------
+systemctl restart httpd.service
